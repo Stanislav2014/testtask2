@@ -1,25 +1,47 @@
 <?php
-require_once('class.php');
-    try {
-         /**
-          * Соединяемся с базой данных @test
-          */
-
-
-        $dbcon = new PDO('mysql:host=mysql;dbname=test', 'dev', 'dev');
 
         /** 
-         * Создаем объект класса @Init    
+         * Сохраняем путь в переменную @path    
          */
-    
-        $sql = new Init($dbcon);
 
+$path = getcwd()."/datafiles/*";
 
         /** 
-         * Вызываем метод @get класса @Init для получения данных из таблицы @test    
+         * Создаем объект @DirectoryIterator который наполнится информацие о файлах    
          */
 
-        $sql->get();
-    } catch(PDOException $e) {
-        echo 'Ошибка: ' . $e->getMessage();
+$dir = new DirectoryIterator(dirname($path));
+
+        /** 
+         * Производим агрегацию массива данных @dir     
+         */
+
+
+foreach ($dir as $fileinfo) {
+    if (preg_match('/[a-zA-z0-9].ixt/',$fileinfo->getFilename()))
+    {
+
+        /** 
+         * Заполняем массив @filenames именами файлов    
+         */
+
+    $filenames[] = $fileinfo->getFilename();
     }
+}
+
+        /** 
+         * сортировка массива @filenames 
+         *     
+         */
+
+natsort($filenames);
+
+        /** 
+         * вывод на экран результата 
+         *     
+         */
+
+foreach ($filenames as $name) 
+{
+    echo $name."<br />\n";
+}
